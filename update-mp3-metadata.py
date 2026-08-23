@@ -71,6 +71,82 @@ def extract_bpm(mp3_path):
         return None
 
 
+# Fields shown by --inspect, in column order.
+INSPECT_FIELDS = ['TIT2', 'TPE1', 'TPE2', 'TDRC', 'TRCK', 'TCON', 'TBPM', 'TCOM']
+
+# Placeholder printed for missing/empty frames in inspect output.
+MISSING_TAG = '---'
+
+
+def _first_frame_text(tags, frame_id):
+    """Return the joined text of the first frame with the given id, else None."""
+    frames = tags.getall(frame_id)
+    if not frames:
+        return None
+    return ''.join(str(t) for t in frames[0].text) or None
+
+
+def inspect_mp3_tags(mp3_path):
+    """Read raw ID3 frames from a file and return a dict of audited fields.
+
+    Returns a dict keyed by the frame ids in INSPECT_FIELDS; each value is
+    the frame's text, or None if the frame is absent. Unreadable files
+    (corrupt tags, non-MP3) yield all-None dicts rather than raising.
+    """
+    result = {field: None for field in INSPECT_FIELDS}
+    try:
+        tags = ID3(mp3_path)
+    except Exception:
+        return result
+
+    for field in INSPECT_FIELDS:
+        result[field] = _first_frame_text(tags, field)
+    return result
+
+
+def format_inspect_table(rows, fmt='table'):
+    """Render inspect results as a fixed-width table or CSV.
+
+    Args:
+        rows: List of dicts, each with a 'file' key plus one entry per
+            field in INSPECT_FIELDS (values may be None).
+        fmt: 'table' for aligned columns, 'csv' for comma-separated output.
+
+    Returns:
+        The formatted output as a string (no trailing newline).
+    """
+    header = ['file'] + INSPECT_FIELDS
+
+    def render(row):
+        return [row['file']] + [
+            row[f] if row[f] is not None else MISSING_TAG for f in INSPECT_FIELDS
+        ]
+
+    rendered = [render(r) for r in rows]
+
+    if fmt == 'csv':
+        lines = [','.join(header)]
+        lines.extend(','.join(str(c) for c in r) for r in rendered)
+        return '\n'.join(lines)
+
+    widths = [max(len(str(c)) for c in col) for col in zip(header, *rendered)]
+    lines = ['  '.join(str(c).ljust(w) for c, w in zip(header, widths))]
+    lines.extend('  '.join(str(c).ljust(w) for c, w in zip(r, widths)) for r in rendered)
+    return '\n'.join(lines)
+
+
+def run_inspect(folder, fmt='table'):
+    """Scan `folder` and print an ID3 tag audit table for every MP3 found."""
+    mp3_files = scan_mp3_files(folder)
+    print(f"Inspecting {len(mp3_files)} MP3 file(s)\n")
+    rows = []
+    for mp3_file in mp3_files:
+        row = inspect_mp3_tags(mp3_file)
+        row['file'] = os.path.relpath(mp3_file, folder)
+        rows.append(row)
+    print(format_inspect_table(rows, fmt=fmt))
+
+
 class ChangeLogger:
     """Logs all file changes for potential rollback."""
     
@@ -520,6 +596,10 @@ File Organization:
     parser.add_argument('--dry-run', action='store_true', help='Preview changes without modifying files')
     parser.add_argument('--rollback', metavar='LOG_FILE', help='Rollback changes from specified log file')
     parser.add_argument('--log', metavar='LOG_FILE', help='Custom log file path (default: auto-generated)')
+    parser.add_argument('--inspect', action='store_true',
+                        help='Print an audit table of ID3 tags in each MP3 (no modifications)')
+    parser.add_argument('--csv', action='store_true',
+                        help='With --inspect: output CSV instead of a fixed-width table')
     
     # If the script is run with no arguments, show help and exit.
     # This helps users discover available CLI options instead of running default behavior.
@@ -533,6 +613,11 @@ File Organization:
     if args.rollback:
         success = rollback_changes(args.rollback)
         sys.exit(0 if success else 1)
+
+    # Handle inspect mode (read-only audit of ID3 tags)
+    if args.inspect:
+        run_inspect(folder, fmt='csv' if args.csv else 'table')
+        sys.exit(0)
     
     # Get folder from argument or use default
     if args.folder:
