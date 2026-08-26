@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MP3 Library Manager</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>MP3 Library Manager</h1>
+  <nav>
+    <button data-view="library" class="tab active">Library</button>
+    <button data-view="duplicates" class="tab">Duplicates</button>
+    <button data-view="suggestions" class="tab">Suggestions</button>
+  </nav>
+</header>
+
+<main>
+<section id="view-library">
+  <div class="controls">
+    <input id="folder-input" type="text" placeholder="/Volumes/SWAP-1/Music">
+    <label><input id="suggest-check" type="checkbox" checked> Generate suggestions</label>
+    <button id="scan-btn">Scan</button>
+    <span id="scan-progress"></span>
+  </div>
+  <input id="search-input" type="search"
+         placeholder="Filter by artist / album / title / path">
+  <table id="library-table">
+    <thead><tr><th>Title</th><th>Artist</th><th>Album</th><th>#</th>
+      <th>Path</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div class="pager">
+    <button id="prev-page">&lsaquo; Prev</button>
+    <span id="page-info"></span>
+    <button id="next-page">Next &rsaquo;</button>
+  </div>
+</section>
+
+<section id="view-duplicates" hidden>
+  <p>Pick the keeper for each cluster, then delete the rest (moved to Trash).
+     Or keep all.</p>
+  <div id="clusters"></div>
+  <div id="trash-details" class="result-details" hidden></div>
+</section>
+
+<section id="view-suggestions" hidden>
+  <div class="controls">
+    <span id="suggest-count"></span>
+    <button id="approve-all-btn">Approve all shown</button>
+    <button id="apply-btn" class="primary">Apply approved</button>
+    <span id="apply-summary"></span>
+  </div>
+  <div id="apply-details" class="result-details" hidden></div>
+  <div id="cards"></div>
+</section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

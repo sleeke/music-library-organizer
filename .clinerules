@@ -1,0 +1,255 @@
+# Agent Instructions for MP3 Metadata POC
+
+## Project Overview
+
+This is an MP3 metadata synchronization script that identifies and organizes MP3 files using:
+1. Audio fingerprinting (AcoustID/MusicBrainz) - most accurate
+2. Filename parsing
+3. Online metadata lookup (iTunes API) - fallback
+
+**Main Script**: `update-mp3-metadata.py`
+
+## Key Architecture
+
+### Core Functions
+- `scan_mp3_files(folder)` - Recursively finds all MP3 files
+- `parse_filename(filename)` - Extracts metadata from `AlbumArtist - Album - Song.mp3` format
+- `query_acoustid(mp3_path)` - Audio fingerprinting identification
+- `query_itunes_api(artist, title, album)` - Text-based metadata lookup
+- `sanitize_filename(filename)` - Removes invalid filesystem characters
+- `compute_checksum(file_path)` - SHA256 hash for content verification
+- `sync_metadata_and_rename(mp3_path, dry_run, logger)` - Main processing function
+- `ChangeLogger` - Logs all changes for rollback capability
+
+### Metadata Fields Priority
+1. **albumartist** - Primary organizer (keeps compilation albums together)
+2. **artist** - Individual track performer
+3. **album** - Album name
+4. **title** - Song title
+5. **tracknumber** - Track position on album
+
+Fallback: `albumartist` → `artist` (and vice versa if one is missing)
+
+### File Naming Convention
+Files are organized into a hierarchical folder structure:
+```
+<Artist>/<Album>/<Track Number> - <Track Name>.mp3
+```
+
+Example: `Coldplay/Parachutes/05 - Yellow.mp3`
+
+Details:
+- Uses `albumartist` for Artist folder (keeps albums together)
+- Track numbers are zero-padded to 2 digits (01, 02, etc.)
+- If no track number available, uses just track name: `<Track Name>.mp3`
+- Falls back to `artist` if `albumartist` unavailable
+- Sanitizes special characters (`/`, `:`, `*`, `?`, `"`, `<`, `>`, `|`)
+- Truncates at 240 chars (leaves room for path)
+
+## Critical Safety Features
+
+### Content Preservation
+- **Checksum verification**: Use `compute_checksum()` before/after operations
+- **No overwrites**: Checks if target filename exists before renaming
+- **Change logging**: `ChangeLogger` records all changes for rollback
+- **Dry-run mode**: `--dry-run` flag previews without modifying files
+- **Rollback capability**: `--rollback <logfile>` reverts changes
+
+### Data Validation
+- Never rename if metadata is insufficient (prevents file loss)
+- Marks failed lookups as "not found" (not blank/None)
+- Preserves original files on error (returns False)
+- Handles API failures gracefully
+
+## Testing Framework
+
+**Location**: `tests/`
+**Framework**: pytest
+**Run**: `pytest -q`
+
+### Test Coverage
+- `tests/test_utils.py` - Unit tests for utility functions
+- `tests/test_sync.py` - Integration tests with mocked MP3/API calls
+- `tests/test_folder_organization.py` - Tests for folder structure organization
+
+### Test Requirements
+- Verify checksum preservation (file content unchanged)
+- Validate metadata parsing from filenames
+- Confirm rename behavior with logging
+- Mock external dependencies (AcoustID, iTunes API, mutagen)
+
+### Test Documentation Requirements
+**CRITICAL: Each test file MUST include:**
+
+1. **Module-level docstring** at the top of the file describing:
+   - What feature(s) the test file covers
+   - Overall testing approach (unit vs integration)
+   - Any special setup or dependencies
+
+2. **Function-level docstrings** for each test describing:
+   - What specific behavior is being tested
+   - Expected outcome
+   - Any edge cases covered
+
+Example:
+```python
+"""
+Tests for folder organization feature.
+
+This module tests the hierarchical folder structure creation:
+Artist/Album/Track - Title.mp3
+
+Tests cover:
+- Directory creation
+- File moving to correct locations
+- Track number formatting
+- Content preservation during moves
+"""
+
+def test_folder_structure_created(tmp_path, monkeypatch):
+    """Test that Artist/Album/ folder structure is created.
+    
+    Verifies that sync_metadata_and_rename creates the proper
+    directory hierarchy when organizing files.
+    """
+```
+
+### Running Tests
+```bash
+source venv/bin/activate
+pytest -q
+```
+
+## Documentation Requirements
+
+### **CRITICAL: Always Update Documentation**
+
+When making ANY changes to the codebase, you MUST update:
+
+#### 1. README.md
+Update if changes affect:
+- **How It Works** section - for algorithm/logic changes
+- **Usage** section - for CLI argument changes
+- **Installation** section - for new dependencies
+- **Technical Details** section - for requirements/architecture
+- **Workflow Example** section - for behavior changes
+- **Limitations** section - for new known limitations
+- **Future Enhancements** section - remove completed items, mark as ✅
+
+#### 2. ISSUES.md
+Update if changes affect:
+- **Known Issues** section - add new issues, mark resolved ones as ✓
+- **Safe Testing Strategy** section - for new safety features
+- **Current Safeguards** section - change ❌ to ✅ when implemented
+- **Missing Safeguards** section - remove when implemented
+- **Future Improvements** section - mark completed with ✅, add dates
+
+### Documentation Update Checklist
+Before completing any task:
+- [ ] Does this change how the script works? → Update README.md "How It Works"
+- [ ] Does this add/modify CLI flags? → Update README.md "Usage" and help text
+- [ ] Does this add dependencies? → Update README.md "Requirements" and requirements.txt
+- [ ] Does this fix a known issue? → Mark in ISSUES.md and remove from "Missing Safeguards"
+- [ ] Does this add a safeguard? → Move from ❌ to ✅ in ISSUES.md
+- [ ] Does this add a limitation? → Document in README.md and ISSUES.md
+- [ ] Are there code examples in docs? → Verify they use `update-mp3-metadata.py`
+
+## Development Guidelines
+
+### Code Changes
+1. **Run tests after every change**: `pytest -q`
+2. **Add tests for new features**: Follow patterns in `tests/`
+3. **Preserve checksums**: Use `compute_checksum()` for verification
+4. **Handle errors gracefully**: Never lose user data
+5. **Log destructive operations**: Use `ChangeLogger` for renames
+
+### Dependencies
+- `mutagen` - MP3 metadata manipulation
+- `requests` - API calls
+- `pyacoustid` - Audio fingerprinting
+- `pytest` - Testing framework
+
+**External Requirement**: `chromaprint` (fpcalc) - Install via `brew install chromaprint`
+
+### API Rate Limiting
+- AcoustID: 1 second delay between calls
+- iTunes API: 0.5 second delay between calls
+- Respectful usage to avoid blocks
+
+### Common Pitfalls
+1. **Filename characters**: Always use `sanitize_filename()` before rename
+2. **Metadata access**: Mutagen returns lists - use `audio.get('key', [None])[0]`
+3. **Album organization**: Use `albumartist`, not `artist` for filenames
+4. **Missing metadata**: Mark as "not found", never blank
+5. **File existence**: Always check `os.path.exists()` before rename
+
+## Change Management
+
+### Feature Implementation Flow
+1. Implement the feature
+2. Add/update tests
+3. Run test suite (`pytest -q`)
+4. Update README.md (relevant sections)
+5. Update ISSUES.md (mark completed, update safeguards)
+6. Document limitations if any
+7. Update help text if CLI changed
+
+### Example: Adding Dry-Run Mode
+- [x] Add `--dry-run` flag to argparse
+- [x] Pass `dry_run` parameter through functions
+- [x] Update README.md usage examples
+- [x] Update ISSUES.md: ❌ → ✅ "Dry-run mode"
+- [x] Add help text in epilog
+- [x] Test with `pytest -q`
+
+## File Structure
+
+```
+mp3-metadata-poc/
+├── update-mp3-metadata.py    # Main script
+├── requirements.txt           # Python dependencies
+├── pytest.ini                 # Pytest configuration
+├── README.md                  # User documentation
+├── ISSUES.md                  # Known issues & improvements
+├── .clinerules               # This file (agent instructions)
+├── tests/
+│   ├── test_utils.py         # Unit tests
+│   └── test_sync.py          # Integration tests
+└── venv/                     # Virtual environment (gitignored)
+```
+
+## Quick Reference
+
+### Run Script
+```bash
+source venv/bin/activate
+python "update-mp3-metadata.py" /path/to/music
+```
+
+### Dry-Run (Preview)
+```bash
+python "update-mp3-metadata.py" --dry-run /path/to/music
+```
+
+### Rollback
+```bash
+python "update-mp3-metadata.py" --rollback changes_TIMESTAMP.json
+```
+
+### Run Tests
+```bash
+pytest -q
+```
+
+### Install Dependencies
+```bash
+pip install -r requirements.txt
+brew install chromaprint  # macOS only
+```
+
+## Remember
+- **Data integrity is paramount** - never risk losing user files
+- **Test everything** - run pytest after changes
+- **Document everything** - update README.md and ISSUES.md
+- **Verify checksums** - ensure file content preserved
+- **Log changes** - enable rollback capability

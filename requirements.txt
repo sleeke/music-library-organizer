@@ -1,0 +1,8 @@
+mutagen
+requests
+pyacoustid
+pytest
+send2trash
+fastapi
+uvicorn[standard]
+httpx
