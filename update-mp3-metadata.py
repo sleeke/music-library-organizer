@@ -602,8 +602,10 @@ def sync_metadata_and_rename(mp3_path, dry_run=False, logger=None, skip_fingerpr
     albumartist = sanitize_filename(albumartist)
     album = sanitize_filename(album)
     title = sanitize_filename(title)
-    
-    # Build new filename with track number if available
+
+    # Build new filename — artist/album are already in the directory path,
+    # so the filename only includes track number and title to avoid duplication.
+    # e.g. <Artist>/<Album>/01 - Title.mp3  (not Artist - Album - 01 - Title.mp3)
     if tracknumber and tracknumber not in ['not found', None]:
         # Pad track number to 2 digits
         try:
@@ -611,9 +613,9 @@ def sync_metadata_and_rename(mp3_path, dry_run=False, logger=None, skip_fingerpr
             track_str = f"{track_num:02d}"
         except (ValueError, TypeError):
             track_str = str(tracknumber)
-        new_name = f"{albumartist} - {album} - {track_str} - {title}.mp3"
+        new_name = f"{track_str} - {title}.mp3"
     else:
-        new_name = f"{albumartist} - {album} - {title}.mp3"
+        new_name = f"{title}.mp3"
     
     # Create directory structure
     base_dir = os.path.dirname(mp3_path)

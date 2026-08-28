@@ -15,3 +15,4 @@ venv/
 
 # Web app local index
 library.db
+library.db*

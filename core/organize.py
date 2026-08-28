@@ -20,6 +20,10 @@ def compute_target_path(mp3_path, tags):
     Returns mp3_path unchanged when renaming is not possible (missing artist
     or title). Album falls back to UNKNOWN_ALBUM_DIR. The display artist
     prefers albumartist and falls back to artist.
+
+    Note: The filename only contains the track number and title (e.g., "01 - Title.mp3")
+    because the artist/album directories already provide that information in the path.
+    This avoids duplication like "Artist - Album / Artist - Album / 01 - Title.mp3".
     """
     title = tags.get('title')
     artist_tag = tags.get('artist')
