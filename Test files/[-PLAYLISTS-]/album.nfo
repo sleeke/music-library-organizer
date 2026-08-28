@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<album>
+  <review />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2026-07-01 18:01:57</dateadded>
+  <title>Nightmare on Wax</title>
+  <runtime>44</runtime>
+  <genre>genre</genre>
+  <studio />
+  <art />
+  <artist>NightmaresOnWax</artist>
+  <albumartist>NightmaresOnWax</albumartist>
+  <track>
+    <position>2</position>
+    <title>Track 02</title>
+    <duration>06:21</duration>
+  </track>
+  <track>
+    <position>3</position>
+    <title>Track 03</title>
+    <duration>04:31</duration>
+  </track>
+  <track>
+    <position>4</position>
+    <title>Track 04</title>
+    <duration>02:29</duration>
+  </track>
+  <track>
+    <position>5</position>
+    <title>Track 05</title>
+    <duration>03:30</duration>
+  </track>
+  <track>
+    <position>6</position>
+    <title>Track 06</title>
+    <duration>05:32</duration>
+  </track>
+  <track>
+    <position>7</position>
+    <title>Track 07</title>
+    <duration>07:56</duration>
+  </track>
+  <track>
+    <position>8</position>
+    <title>Track 08</title>
+    <duration>04:17</duration>
+  </track>
+  <track>
+    <position>9</position>
+    <title>Track 09</title>
+    <duration>04:30</duration>
+  </track>
+  <track>
+    <position>10</position>
+    <title>Track 10</title>
+    <duration>05:10</duration>
+  </track>
+</album>
