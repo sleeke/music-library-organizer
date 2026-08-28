@@ -8,17 +8,11 @@ This module tests core utility functions that support the MP3 metadata script:
 Testing approach: Unit tests with direct function calls and temporary files.
 """
 
-import importlib.util
 import os
 from pathlib import Path
 import hashlib
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
-
-spec = importlib.util.spec_from_file_location('update_mp3_module', str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+import update_mp3_metadata as module
 
 
 def test_sanitize_and_parse_filename():

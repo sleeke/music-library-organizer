@@ -9,17 +9,13 @@ All network access is mocked. Contract under test:
   - writes an APIC (front cover) frame via mutagen
 - dry_run compatibility: fetch_cover_and_embed(..., dry_run=True) never writes
 """
-import importlib.util
 import os
 import sys
 from pathlib import Path
 
 import pytest
 
-MODULE_PATH = Path(__file__).resolve().parent.parent / "update-mp3-metadata.py"
-spec = importlib.util.spec_from_file_location("update_mp3_module", str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+import update_mp3_metadata as module
 
 
 class FakeResponse:

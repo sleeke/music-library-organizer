@@ -7,19 +7,13 @@ Testing approach: unit tests against real mutagen ID3 tags written to
 temporary files, plus pure-function tests for normalization helpers.
 """
 
-import importlib.util
 import os
 from pathlib import Path
 
 import pytest
 from mutagen.id3 import ID3, TCON, TBPM
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
-
-spec = importlib.util.spec_from_file_location('update_mp3_module', str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+import update_mp3_metadata as module
 
 
 def _make_tag_file(tmp_path, name, frames):

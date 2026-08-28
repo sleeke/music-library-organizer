@@ -11,6 +11,7 @@ FIELDS = ('artist', 'albumartist', 'album', 'title', 'tracknumber')
 _INVALID = {None, '', 'unknown', '-', ' ', 'not found'}
 _DIGIT_ONLY_FIELDS = ('artist', 'albumartist', 'title')
 
+CONFIDENCE_THRESHOLD = 0.5
 
 def _invalid(value):
     if value is None:
@@ -78,7 +79,7 @@ def generate_for_file(path, tags):
                     if key == 'album' and _is_valid(current):
                         proposed = str(value)
                         # Only propose if: confident AND not a trivial edit (case/whitespace/punctuation)
-                        if confidence is not None and confidence >= 0.5 \
+                        if confidence is not None and confidence >= CONFIDENCE_THRESHOLD \
                                 and not _is_trivial_edit(current, proposed):
                             fields[key] = proposed
                             sources[key] = 'acoustid'
@@ -100,7 +101,7 @@ def generate_for_file(path, tags):
                 if value:
                     current = tags.get(key)
 
-                    if key == 'album' and _is_valid(current):
+                    if key == 'album' and _is_valid(current) and key not in fields:
                         proposed = str(value)
                         # iTunes match is treated as confident;
                         # only propose a CHANGE when it differs beyond trivial edits.

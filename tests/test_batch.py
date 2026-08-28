@@ -8,17 +8,13 @@ Testing approach: monkeypatch scan_mp3_files + sync_metadata_and_rename,
 capture stdout via capsys.
 """
 
-import importlib.util
 from pathlib import Path
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
+import update_mp3_metadata as module
 
-spec = importlib.util.spec_from_file_location('update_mp3_module', str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 @pytest.fixture
@@ -68,6 +64,6 @@ class TestCliFlag:
     def test_flag_present_in_argparser(self):
         import subprocess, sys
         result = subprocess.run(
-            [sys.executable, str(PROJECT_ROOT / 'update-mp3-metadata.py'), '--help'],
+            [sys.executable, str(PROJECT_ROOT / 'update_mp3_metadata.py'), '--help'],
             capture_output=True, text=True)
         assert '--batch' in result.stdout

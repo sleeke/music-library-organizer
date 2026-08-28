@@ -1,4 +1,4 @@
-"""Shared utility functions extracted from update-mp3-metadata.py."""
+"""Shared utility functions extracted from update_mp3_metadata.py."""
 import hashlib
 import os
 

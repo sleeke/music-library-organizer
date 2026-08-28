@@ -4,11 +4,7 @@ Before fix: <Artist>/<Album>/<Artist - Album - NN - Title>.mp3
 After fix:  <Artist>/<Album>/NN - Title.mp3
 """
 
-import os
-from pathlib import Path
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
+from core.organize import compute_target_path
 
 
 def test_compute_target_path_no_duplication():
@@ -26,8 +22,6 @@ def test_compute_target_path_no_duplication():
     so the path is:
         /Users/Shared/Classical/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3
     """
-    from update_mp3_module import compute_target_path, sanitize_filename
-
     mp3_path = '/Users/Shared/Classical/Bach/Flute Sonata/Fake.mp3'
 
     tags = {
@@ -54,8 +48,6 @@ def test_compute_target_path_no_duplication():
 
 def test_compute_target_path_without_tracknumber():
     """Test that files without track numbers don't duplicate artist/album."""
-    from update_mp3_module import compute_target_path
-
     mp3_path = '/Users/Shared/Jazz/Miles Davis/Fake.mp3'
     tags = {
         'artist': 'Miles Davis',
@@ -72,8 +64,6 @@ def test_compute_target_path_without_tracknumber():
 
 def test_compute_target_path_with_tracknumber():
     """Test that track numbers are zero-padded and no duplication occurs."""
-    from update_mp3_module import compute_target_path
-
     mp3_path = '/Users/Shared/Rock/Band/Album/Fake.mp3'
     tags = {
         'artist': 'Band',
@@ -91,8 +81,6 @@ def test_compute_target_path_with_tracknumber():
 
 def test_compute_target_path_missing_artist():
     """Test that missing artist returns the original path unchanged."""
-    from update_mp3_module import compute_target_path
-
     mp3_path = '/path/to/Fake.mp3'
     tags = {'albumartist': 'Artist', 'album': 'Album', 'title': 'Title'}
 
@@ -101,4 +89,4 @@ def test_compute_target_path_missing_artist():
 
 
 if __name__ == '__main__':
-    # This file is meant to be run via pytest in the project's test suite.
+    pass

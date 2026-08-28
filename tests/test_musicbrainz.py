@@ -8,17 +8,11 @@ Testing approach: requests.get is mocked — no network. Rate-limit behavior
 is verified by asserting the module-level sleep helper is invoked.
 """
 
-import importlib.util
 from pathlib import Path
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
-
-spec = importlib.util.spec_from_file_location('update_mp3_module', str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+import update_mp3_metadata as module
 
 
 class FakeResponse:

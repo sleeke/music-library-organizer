@@ -8,15 +8,8 @@ from core.changelog import ChangeLogger
 
 @pytest.fixture
 def cli():
-    """Load update-mp3-metadata.py under a module name that isn't shadowed
-    by any installed package."""
-    import importlib.util
-
-    spec = importlib.util.spec_from_file_location(
-        "mp3_cli", "update-mp3-metadata.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    import update_mp3_metadata
+    return update_mp3_metadata
 
 
 class TestChangeLoggerDeleteEntries:

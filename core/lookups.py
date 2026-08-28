@@ -1,6 +1,6 @@
 """Online metadata lookups: AcoustID fingerprinting + iTunes Search API.
 
-Extracted verbatim from update-mp3-metadata.py so both the CLI and the web
+Extracted verbatim from update_mp3_metadata.py so both the CLI and the web
 app share one implementation. Includes the MusicBrainz artist lookup that
 AcoustID results are enriched with.
 """

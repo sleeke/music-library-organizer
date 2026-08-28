@@ -1,6 +1,6 @@
 """Change-log recording shared by the CLI and the web app.
 
-Extracted from update-mp3-metadata.py so both frontends append to the same
+Extracted from update_mp3_metadata.py so both frontends append to the same
 JSON format that the CLI's --rollback consumes.
 """
 import json

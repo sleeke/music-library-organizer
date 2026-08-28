@@ -16,19 +16,13 @@ Key features tested:
 - Change logging for rollback
 """
 
-import importlib.util
 import os
 from pathlib import Path
 import json
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
-
-spec = importlib.util.spec_from_file_location('update_mp3_module', str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+import update_mp3_metadata as module
 
 
 class FakeAudio:
@@ -101,8 +95,8 @@ def test_sync_metadata_and_rename_preserves_content_and_logs(tmp_path, monkeypat
     success = module.sync_metadata_and_rename(str(src), dry_run=False, logger=logger)
     assert success is True
 
-    # Find renamed file in folder structure Artist/Album/Artist - Album - Title.mp3
-    expected_path = tmp_path / 'Artist' / 'Album' / 'Artist - Album - Song.mp3'
+    # Find renamed file in folder structure Artist/Album/Song.mp3
+    expected_path = tmp_path / 'Artist' / 'Album' / 'Song.mp3'
     assert expected_path.exists()
 
     # Check checksum unchanged
@@ -115,7 +109,7 @@ def test_sync_metadata_and_rename_preserves_content_and_logs(tmp_path, monkeypat
     assert change['original_path'].endswith('track01.mp3')
     assert 'Artist' in change['new_path']
     assert 'Album' in change['new_path']
-    assert 'Artist - Album - Song.mp3' in change['new_path']
+    assert 'Song.mp3' in change['new_path']
 
     # Save and load log to confirm valid JSON
     logger.save()

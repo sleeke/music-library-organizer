@@ -9,18 +9,12 @@ Testing approach: pure-function and file-based tests over ChangeLogger with
 in-memory change records; no MP3s or network involved.
 """
 
-import importlib.util
 import json
 from pathlib import Path
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = PROJECT_ROOT / 'update-mp3-metadata.py'
-
-spec = importlib.util.spec_from_file_location('update_mp3_module', str(MODULE_PATH))
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+import update_mp3_metadata as module
 
 
 def _sample_change(n=1):
