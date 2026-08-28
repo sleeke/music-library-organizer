@@ -4,6 +4,8 @@ Before fix: <Artist>/<Album>/<Artist - Album - NN - Title>.mp3
 After fix:  <Artist>/<Album>/NN - Title.mp3
 """
 
+from pathlib import Path
+
 from core.organize import compute_target_path
 
 
@@ -14,15 +16,15 @@ def test_compute_target_path_no_duplication():
         Artist - Album - NN - Title.mp3
 
     which caused paths like:
-        /Users/Shared/Classical/Bach/Classical/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3
+        /incoming/Bach/incoming/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3
 
     The fix changes the filename to just:
         NN - Title.mp3
 
     so the path is:
-        /Users/Shared/Classical/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3
+        /incoming/Bach/incoming/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3
     """
-    mp3_path = '/Users/Shared/Classical/Bach/Flute Sonata/Fake.mp3'
+    mp3_path = '/incoming/Bach/incoming/Fake.mp3'
 
     tags = {
         'artist': 'Bach',
@@ -33,7 +35,7 @@ def test_compute_target_path_no_duplication():
     }
 
     result = compute_target_path(mp3_path, tags)
-    expected = '/Users/Shared/Classical/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3'
+    expected = '/incoming/Bach/incoming/Bach/Classical/07 - Flute Sonata 2 - Allegro.mp3'
 
     assert result == expected, (
         f"Expected:\n  {expected}\nGot:\n  {result}"
@@ -48,7 +50,7 @@ def test_compute_target_path_no_duplication():
 
 def test_compute_target_path_without_tracknumber():
     """Test that files without track numbers don't duplicate artist/album."""
-    mp3_path = '/Users/Shared/Jazz/Miles Davis/Fake.mp3'
+    mp3_path = '/incoming/Miles Davis/incoming/Fake.mp3'
     tags = {
         'artist': 'Miles Davis',
         'albumartist': 'Miles Davis',
@@ -57,14 +59,14 @@ def test_compute_target_path_without_tracknumber():
     }
 
     result = compute_target_path(mp3_path, tags)
-    expected = '/Users/Shared/Jazz/Miles Davis/Kind of Blue/So What.mp3'
+    expected = '/incoming/Miles Davis/incoming/Miles Davis/Kind of Blue/So What.mp3'
 
     assert result == expected
 
 
 def test_compute_target_path_with_tracknumber():
     """Test that track numbers are zero-padded and no duplication occurs."""
-    mp3_path = '/Users/Shared/Rock/Band/Album/Fake.mp3'
+    mp3_path = '/incoming/Band/incoming/Fake.mp3'
     tags = {
         'artist': 'Band',
         'albumartist': 'Band',
@@ -74,7 +76,7 @@ def test_compute_target_path_with_tracknumber():
     }
 
     result = compute_target_path(mp3_path, tags)
-    expected = '/Users/Shared/Rock/Band/Album/05 - Track Title.mp3'
+    expected = '/incoming/Band/incoming/Band/Album/05 - Track Title.mp3'
 
     assert result == expected
 
