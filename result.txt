@@ -1,0 +1,191 @@
+  DI trance.m3u: no change (23 lines)
+  Shadowdemon.m3u: changed 1929/3859 lines
+  Simsi Old Skool.m3u: changed 13/27 lines
+  Super Soul Sounds.m3u: changed 22/45 lines
+  alarm.m3u: changed 8/17 lines
+  anger.m3u: changed 83/167 lines
+  atmosphere.m3u: changed 10/21 lines
+  cheesy trance.m3u: changed 214/429 lines
+  chilled + caned.m3u: changed 144/289 lines
+  classical.m3u: no change (305 lines)
+  electronic chill.m3u: changed 19/39 lines
+  electronic wakeup.m3u: changed 9/19 lines
+  ess.m3u: no change (59 lines)
+  everything 2.m3u: changed 7307/14615 lines
+  everything.m3u: changed 15368/15629 lines
+  excited.m3u: changed 106/213 lines
+  faves.m3u: changed 580/1161 lines
+  favourite hardcore.m3u: changed 24/49 lines
+  favourite psy trance.m3u: changed 48/97 lines
+  favourite.m3u: changed 521/1043 lines
+  garden.m3u: changed 47/95 lines
+  good full on psytrance.m3u: changed 9/19 lines
+  good melodic psytrance.m3u: changed 11/23 lines
+  good minimal techno.m3u: changed 6/13 lines
+  good progressive psytrance.m3u: changed 5/11 lines
+  han.m3u: changed 12/25 lines
+  happiness.m3u: changed 103/207 lines
+  hard.m3u: changed 265/531 lines
+  hardcore.m3u: changed 50/101 lines
+  ibiza chilloout.m3u: changed 37/75 lines
+  jitta trance.m3u: changed 41/83 lines
+  kay fest.m3u: changed 41/83 lines
+  krazy hardkore.m3u: changed 14/29 lines
+  lively wakeup.m3u: changed 5/11 lines
+  love.m3u: changed 114/229 lines
+  mp3.m3u: changed 7342/14685 lines
+  new.m3u: changed 97/195 lines
+  revision.m3u: changed 217/435 lines
+  simC.m3u: changed 14/29 lines
+  summer games.m3u: changed 30/61 lines
+  summer.m3u: changed 25/51 lines
+  working.m3u: changed 105/211 lines
+
+Converted 39 of 42 playlist(s).
+
+Still-unresolved directory prefixes (may need manual attention):
+  E:/Downloads/kazaa downloads/New Folder
+  F:/Documents/My Received Files/From Kay
+  F:/kazaa downloads
+  F:/limewire downloads
+  I:
+  I:/1 Thing
+  I:/Black Dog Productions/Bytes
+  I:/MP3/Breakbeat
+  I:/MP3/Country
+  I:/MP3/Dancehall
+  I:/MP3/Electronica
+  I:/MP3/Film Soundtracks
+  I:/MP3/HipHop+Rap/Harcore Rap
+  I:/MP3/HipHop+Rap/Jazz Rap
+  I:/MP3/House
+  I:/MP3/House/Deep House
+  I:/MP3/House/Progressive House
+  I:/MP3/Ibiza Chillout
+  I:/MP3/Jungle Drum+Bass
+  I:/MP3/Jungle Drum+Bass/Light Drum+Bass
+  I:/MP3/Latin
+  I:/MP3/Pop/1970s
+  I:/MP3/Punk/Ska Punk
+  I:/MP3/R&B
+  I:/MP3/Reggae
+  I:/MP3/Rock
+  I:/MP3/Rock/Rock&Roll
+  I:/MP3/Ska
+  I:/MP3/Techno/Ambient Techno
+  I:/MP3/Trance
+  I:/MP3/Trance/Hard Trance
+  I:/MP3/Trance/Progressive Trance
+  I:/MP3/Trance/Psytrance
+  I:/MP3/Trance/Vocal Trance
+  I:/MP3/[-UNSORTED-]
+  I:/MP3/[-UNSORTED-]/Kay Fest
+  I:/MP3/[-UNSORTED-]/Kay Fest/1 Thing
+  I:/MP3/[-UNSORTED-]/Remixes
+  I:/MP3/[-UNSORTED-]/artists/DJ Vadim - USSR Reconstruction
+  I:/MP3/[-UNSORTED-]/trance [psytrance]
+  L:
+  M:/Acid Jazz
+  M:/Afro Pop
+  M:/Ambient
+  M:/Ambient Techno
+  M:/Bigbeat
+  M:/Blues Rock
+  M:/Bubblegum rock
+  M:/Christmas
+  M:/Classical
+  M:/Country
+  M:/Dancehall
+  M:/Downbeat
+  M:/Electrelane/The Power Out
+  M:/Electronica
+  M:/Film Soundtracks
+  M:/Folk
+  M:/Funky
+  M:/HipHop [French]
+  M:/HipHop [Spanish]
+  M:/HipHop [UK]
+  M:/HipHop [US Gangsta]
+  M:/HipHop [US]
+  M:/House [Hard]
+  M:/Indie
+  M:/Jazz
+  M:/Jazz [Vocal]
+  M:/Jungle
+  M:/Latin
+  M:/Mogwai/Stanley Kubrick EP
+  M:/Nitin Sawhney/Beyond Skin [UK]
+  M:/Pop
+  M:/Pop [60s]
+  M:/Pop [70s]
+  M:/Punk Rock
+  M:/R+B
+  M:/Rap
+  M:/Reggae
+  M:/Remixes
+  M:/Rock
+  M:/Rock [Alternative]
+  M:/Rock [Neo-psychedelic]
+  M:/Rock [Psychedelic]
+  M:/Rock [Slow]
+  M:/Ska
+  M:/Ska Punk
+  M:/Soul
+  M:/Stylophonic/Man Music Technology
+  M:/Swing
+  M:/Themes
+  M:/Trance
+  M:/Trance [Goa]
+  M:/[Unsorted Tings Dem]
+  M:/[Unsorted Tings Dem]/Big Boi
+  M:/[Unsorted Tings Dem]/Electrolane
+  M:/[Unsorted Tings Dem]/Radiohead/The Bends
+  M:/[Unsorted Tings Dem]/Red Snapper/Making Bones
+  M:/[Unsorted Tings Dem]/Roy Ayers/Virgin Ubiquity Unreleased Recordings 1976-1981
+  M:/[Unsorted Tings Dem]/Shuggie Otis/Inspiration Information
+  M:/[Unsorted Tings Dem]/Spiritualized/Ladies and Gentlemen We Are Floating in Space
+  M:/[Unsorted Tings Dem]/Stevie Wonder/Songs in the Key of Life (2 of 2)
+  M:/[Unsorted Tings Dem]/The Shadows
+  M:/[Unsorted Tings Dem]/United Future Organization/No Sound Is Too Taboo
+  M:/blues
+  M:/folk rock
+  M:/pisstakes
+  M:/synth
+  NightmaresOnWax - Nightmare on Wax - 02 - Track 02.mp3
+  NightmaresOnWax - NightmareOnWax - 03 - Track 03.mp3
+  NightmaresOnWax - NightmareOnWax - 04 - Track 04.mp3
+  NightmaresOnWax - NightmareOnWax - 05 - Track 05.mp3
+  NightmaresOnWax - NightmareOnWax - 06 - Track 06.mp3
+  NightmaresOnWax - NightmareOnWax - 07 - Track 07.mp3
+  NightmaresOnWax - NightmareOnWax - 08 - Track 08.mp3
+  NightmaresOnWax - NightmareOnWax - 09 - Track 09.mp3
+  NightmaresOnWax - NightmareOnWax - 10 - Track 10.mp3
+  http://205.138.199.6:11411
+  http://70.84.34.66:11411
+  http://70.84.34.66:12521
+  http://70.84.34.66:13631
+  http://70.84.34.66:14741
+  http://70.84.34.74:11411
+  http://70.84.34.74:12521
+  http://70.84.34.74:13631
+  http://70.85.110.218:11411
+  http://70.85.110.218:12521
+  http://70.85.110.218:13631
+  http://70.85.15.122:11411
+  http://70.85.15.122:12521
+  http://70.85.15.122:13631
+  http://70.85.15.122:14741
+  http://70.85.15.122:15851
+  http://70.85.15.122:16961
+  http://70.85.15.122:18081
+  http://70.85.15.122:19291
+  http://70.85.178.10:11411
+  http://70.85.178.10:12521
+  http://70.85.178.10:13631
+  http://70.85.182.122:12521
+  http://70.85.182.122:13631
+  http://70.85.182.122:14741
+  http://70.85.182.122:15851
+  http://70.85.74.74:11411
+  http://70.85.74.74:12521
+  http://70.85.74.74:13631
