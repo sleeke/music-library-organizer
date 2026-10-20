@@ -7,8 +7,11 @@
 **Solution Implemented (Feb 2026):**
 The script now creates a hierarchical folder structure:
 ```
-<Artist>/<Album>/Artist - Album - <Track Number> - <Track Name>.mp3
+<Artist>/<Album>/<Track Number> - <Track Name>.mp3
 ```
+
+(Aug 2026: artist and album were dropped from the filename since the folders
+already carry them.)
 
 For compilation albums:
 - Uses `albumartist` = "Various Artists" for the folder
@@ -19,9 +22,9 @@ Example:
 ```
 Various Artists/
   Now That's What I Call Music! 50/
-    Various Artists - Now That's What I Call Music! 50 - 01 - Rolling in the Deep.mp3    (Adele)
-    Various Artists - Now That's What I Call Music! 50 - 02 - Just the Way You Are.mp3   (Bruno Mars)
-    Various Artists - Now That's What I Call Music! 50 - 03 - Firework.mp3               (Katy Perry)
+    01 - Rolling in the Deep.mp3    (Adele)
+    02 - Just the Way You Are.mp3   (Bruno Mars)
+    03 - Firework.mp3               (Katy Perry)
 ```
 
 **Benefits:**

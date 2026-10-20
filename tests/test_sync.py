@@ -101,8 +101,8 @@ def test_sync_metadata_and_rename_preserves_content_and_logs(tmp_path, monkeypat
     success = module.sync_metadata_and_rename(str(src), dry_run=False, logger=logger)
     assert success is True
 
-    # Find renamed file in folder structure Artist/Album/Artist - Album - Title.mp3
-    expected_path = tmp_path / 'Artist' / 'Album' / 'Artist - Album - Song.mp3'
+    # Find renamed file in folder structure Artist/Album/Title.mp3
+    expected_path = tmp_path / 'Artist' / 'Album' / 'Song.mp3'
     assert expected_path.exists()
 
     # Check checksum unchanged
@@ -115,7 +115,7 @@ def test_sync_metadata_and_rename_preserves_content_and_logs(tmp_path, monkeypat
     assert change['original_path'].endswith('track01.mp3')
     assert 'Artist' in change['new_path']
     assert 'Album' in change['new_path']
-    assert 'Artist - Album - Song.mp3' in change['new_path']
+    assert change['new_path'].endswith('/Artist/Album/Song.mp3')
 
     # Save and load log to confirm valid JSON
     logger.save()

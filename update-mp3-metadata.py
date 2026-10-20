@@ -15,6 +15,7 @@ import acoustid
 from core.utils import sanitize_filename, parse_filename, compute_checksum, scan_mp3_files
 from core.lookups import query_acoustid, query_itunes_api, query_musicbrainz_artist
 from core.changelog import ChangeLogger
+from core.organize import organized_base_dir
 
 # =============================================================================
 # Changelog
@@ -618,7 +619,7 @@ def sync_metadata_and_rename(mp3_path, dry_run=False, logger=None, skip_fingerpr
         new_name = f"{title}.mp3"
     
     # Create directory structure
-    base_dir = os.path.dirname(mp3_path)
+    base_dir = organized_base_dir(mp3_path, albumartist, album)
     artist_dir = os.path.join(base_dir, albumartist)
     album_dir = os.path.join(artist_dir, album)
     new_path = os.path.join(album_dir, new_name)

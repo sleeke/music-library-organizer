@@ -1,13 +1,13 @@
 """Tests for folder organization feature.
 
 This module tests the hierarchical folder structure creation:
-<Artist>/<Album>/Artist - Album - <Track Number> - <Track Name>.mp3
+<Artist>/<Album>/<Track Number> - <Track Name>.mp3
 
 Features tested:
 - Directory creation (Artist/Album/ hierarchy)
 - File moving to correct locations
 - Track number formatting (zero-padding to 2 digits)
-- Files without track numbers (fallback to Artist - Album - Title)
+- Files without track numbers (fallback to Title only)
 - Content preservation during folder moves (checksum verification)
 - Change logging for folder moves
 - Dry-run mode (preview without creating folders)
@@ -103,7 +103,7 @@ def test_folder_structure_created(tmp_path, monkeypatch):
 
 
 def test_file_moved_to_correct_location(tmp_path, monkeypatch):
-    """Test that file is moved to Artist/Album/Artist - Album - Track - Title.mp3."""
+    """Test that file is moved to Artist/Album/Track - Title.mp3."""
     src = tmp_path / 'unknown.mp3'
     src.write_bytes(b'FAKE_MP3_DATA')
 
@@ -118,7 +118,7 @@ def test_file_moved_to_correct_location(tmp_path, monkeypatch):
     assert success is True
 
     # Verify file at new location
-    expected_path = tmp_path / 'The Beatles' / 'Abbey Road' / 'The Beatles - Abbey Road - 01 - Come Together.mp3'
+    expected_path = tmp_path / 'The Beatles' / 'Abbey Road' / '01 - Come Together.mp3'
     assert expected_path.exists()
     assert not src.exists()  # Original file should be moved
 
@@ -138,7 +138,7 @@ def test_track_number_padded(tmp_path, monkeypatch):
     success = module.sync_metadata_and_rename(str(src), dry_run=False, logger=None)
     assert success is True
 
-    expected_path = tmp_path / 'Artist' / 'Album' / 'Artist - Album - 03 - Song.mp3'
+    expected_path = tmp_path / 'Artist' / 'Album' / '03 - Song.mp3'
     assert expected_path.exists()
 
 
@@ -156,8 +156,8 @@ def test_no_track_number_still_works(tmp_path, monkeypatch):
     success = module.sync_metadata_and_rename(str(src), dry_run=False, logger=None)
     assert success is True
 
-    # Without track number, filename is Artist - Album - Title
-    expected_path = tmp_path / 'Artist' / 'Album' / 'Artist - Album - Song Title.mp3'
+    # Without track number, filename is just the title
+    expected_path = tmp_path / 'Artist' / 'Album' / 'Song Title.mp3'
     assert expected_path.exists()
 
 
@@ -181,7 +181,7 @@ def test_checksum_preserved_across_folder_move(tmp_path, monkeypatch):
     assert success is True
 
     # Find new location and verify checksum
-    new_path = tmp_path / 'Artist' / 'Album' / 'Artist - Album - 05 - Track.mp3'
+    new_path = tmp_path / 'Artist' / 'Album' / '05 - Track.mp3'
     assert new_path.exists()
     
     after = module.compute_checksum(str(new_path))
@@ -213,7 +213,7 @@ def test_logger_records_folder_move(tmp_path, monkeypatch):
     assert change['original_path'].endswith('song.mp3')
     assert 'Artist' in change['new_path']
     assert 'Album' in change['new_path']
-    assert 'Artist - Album - 07 - Song.mp3' in change['new_path']
+    assert change['new_path'].endswith('/Artist/Album/07 - Song.mp3')
 
 
 def test_dry_run_does_not_create_folders(tmp_path, monkeypatch):
@@ -263,7 +263,7 @@ def test_special_characters_sanitized_in_folders(tmp_path, monkeypatch):
 
 def test_parse_filename_recognizes_track_numbers(tmp_path):
     """Test that parse_filename extracts track numbers correctly."""
-    # Full output format: "Artist - Album - NN - Title.mp3"
+    # Legacy long format, still recognized as input: "Artist - Album - NN - Title.mp3"
     result = module.parse_filename('/path/to/Coldplay - Parachutes - 05 - Yellow.mp3')
     assert result['albumartist'] == 'Coldplay'
     assert result['album'] == 'Parachutes'

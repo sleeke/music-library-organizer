@@ -19,43 +19,62 @@
 <main>
 <section id="view-library">
   <div class="controls">
-    <input id="folder-input" type="text" placeholder="/Volumes/SWAP-1/Music">
-    <label><input id="suggest-check" type="checkbox" checked> Generate suggestions</label>
-    <button id="scan-btn">Scan</button>
+    <input id="folder-input" type="text" placeholder="/Volumes/SWAP-1/Music"
+           aria-label="Folder to scan">
+    <label class="check"><input id="suggest-check" type="checkbox" checked> Generate suggestions</label>
+    <button id="scan-btn" class="primary">Scan</button>
     <span id="scan-progress"></span>
   </div>
-  <input id="search-input" type="search"
-         placeholder="Filter by artist / album / title / path">
-  <table id="library-table">
-    <thead><tr><th>Title</th><th>Artist</th><th>Album</th><th>#</th>
-      <th>Path</th><th></th></tr></thead>
-    <tbody></tbody>
-  </table>
+  <div class="controls">
+    <input id="search-input" type="search" aria-label="Filter library"
+           placeholder="Filter by artist / album / title / path">
+  </div>
+  <div class="table-wrap">
+    <table id="library-table">
+      <colgroup>
+        <col class="c-play"><col class="c-title"><col class="c-artist">
+        <col class="c-album"><col class="c-num"><col>
+      </colgroup>
+      <thead><tr><th></th><th>Title</th><th>Artist</th><th>Album</th>
+        <th class="num">#</th><th>Path</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
   <div class="pager">
     <button id="prev-page">&lsaquo; Prev</button>
-    <span id="page-info"></span>
+    <span id="page-info" class="muted"></span>
     <button id="next-page">Next &rsaquo;</button>
   </div>
 </section>
 
 <section id="view-duplicates" hidden>
-  <p>Pick the keeper for each cluster, then delete the rest (moved to Trash).
-     Or keep all.</p>
-  <div id="clusters"></div>
+  <p class="intro">Pick the file to keep in each group, then move the others to Trash.
+     Highlighted cells are where the copies differ. Switching playback between copies
+     keeps the position, so you can A/B them.</p>
   <div id="trash-details" class="result-details" hidden></div>
+  <div id="clusters"></div>
 </section>
 
 <section id="view-suggestions" hidden>
   <div class="controls">
-    <span id="suggest-count"></span>
+    <strong id="suggest-count"></strong>
+    <span class="spacer"></span>
     <button id="approve-all-btn">Approve all shown</button>
     <button id="apply-btn" class="primary">Apply approved</button>
-    <span id="apply-summary"></span>
   </div>
   <div id="apply-details" class="result-details" hidden></div>
   <div id="cards"></div>
 </section>
 </main>
+
+<div id="player" hidden>
+  <button id="player-toggle" class="play" aria-label="Play or pause"></button>
+  <div id="player-name" class="path"></div>
+  <input id="player-seek" type="range" min="0" max="0" step="0.1" value="0"
+         aria-label="Seek">
+  <span id="player-time">0:00 / 0:00</span>
+</div>
+<audio id="audio" preload="none"></audio>
 
 <script src="/app.js"></script>
 </body>

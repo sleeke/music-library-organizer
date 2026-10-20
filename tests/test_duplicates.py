@@ -91,3 +91,56 @@ def test_cluster_key_is_stable_hash_of_members():
     c1 = find_duplicate_clusters(files)
     c2 = find_duplicate_clusters(list(reversed(files)))
     assert c1[0]['key'] == c2[0]['key']
+
+
+def _keeper(files):
+    clusters = find_duplicate_clusters(files)
+    assert len(clusters) == 1
+    return clusters[0]['members'][0]['path']
+
+
+def test_keeper_prefers_most_tags_when_size_gap_is_small():
+    assert _keeper([
+        f('/a/x.mp3', checksum='s', title='T', size=5_400_000),
+        f('/b/y.mp3', checksum='s', title='T', artist='A', album='AL',
+          size=5_000_000),
+    ]) == '/b/y.mp3'
+
+
+def test_keeper_prefers_significantly_larger_file_over_more_tags():
+    assert _keeper([
+        f('/a/x.mp3', checksum='s', title='T', artist='A', album='AL',
+          size=5_000_000),
+        f('/b/y.mp3', checksum='s', title='T', size=5_500_000),
+    ]) == '/b/y.mp3'
+
+
+def test_keeper_breaks_tag_tie_by_size():
+    assert _keeper([
+        f('/a/x.mp3', checksum='s', title='T', size=5_000_000),
+        f('/b/y.mp3', checksum='s', title='T', size=5_100_000),
+    ]) == '/b/y.mp3'
+
+
+def test_keeper_handles_missing_size():
+    assert _keeper([
+        f('/a/x.mp3', checksum='s', size=None),
+        f('/b/y.mp3', checksum='s', size=1_000),
+    ]) == '/b/y.mp3'
+
+
+def test_non_keepers_stay_in_path_order():
+    clusters = find_duplicate_clusters([
+        f('/c.mp3', checksum='s'),
+        f('/a.mp3', checksum='s'),
+        f('/b.mp3', checksum='s', title='T'),
+    ])
+    assert [m['path'] for m in clusters[0]['members']] == \
+        ['/b.mp3', '/a.mp3', '/c.mp3']
+
+
+def test_cluster_key_unaffected_by_keeper_choice():
+    small = [f('/a.mp3', checksum='s', size=1), f('/b.mp3', checksum='s', size=1)]
+    big_b = [f('/a.mp3', checksum='s', size=1), f('/b.mp3', checksum='s', size=9)]
+    assert find_duplicate_clusters(small)[0]['key'] == \
+        find_duplicate_clusters(big_b)[0]['key']

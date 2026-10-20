@@ -9,6 +9,10 @@ _STRIP_SUFFIX = re.compile(
 _FEAT_TAIL = re.compile(r'\bfeat\.?\b.*$', re.I)
 # Leading track numbers in filenames ("01 - Song.mp3" -> "Song").
 _LEADING_TRACKNUM = re.compile(r'^\d{1,3}[\s._-]+')
+_INFO_FIELDS = ('title', 'artist', 'albumartist', 'album', 'tracknumber')
+# A copy this much larger than the best-tagged one is kept instead (likely
+# a higher-bitrate encode).
+_SIGNIFICANT_SIZE_RATIO = 1.10
 
 
 def normalize_text(value):
@@ -38,6 +42,22 @@ def _match_keys(f):
     if f.get('checksum'):
         keys.append(('sum', f['checksum']))
     return keys
+
+
+def _pick_keeper(members):
+    """Best-tagged copy, unless another is significantly larger."""
+    def size(m):
+        return m.get('size') or 0
+
+    def info(m):
+        return sum(1 for k in _INFO_FIELDS if m.get(k))
+
+    # max() keeps the first of equal items, so path order breaks final ties.
+    best_tagged = max(members, key=lambda m: (info(m), size(m)))
+    largest = max(members, key=size)
+    if size(largest) and size(largest) >= size(best_tagged) * _SIGNIFICANT_SIZE_RATIO:
+        return largest
+    return best_tagged
 
 
 class _DSU:
@@ -78,6 +98,9 @@ def find_duplicate_clusters(files):
         if len(members) < 2:
             continue
         members.sort(key=lambda m: m['path'])
+        keeper = _pick_keeper(members)
+        members.remove(keeper)
+        members.insert(0, keeper)
         digest = hashlib.sha1(
             ','.join(sorted(m['path'] for m in members)).encode()).hexdigest()
         clusters.append({'key': digest[:16], 'members': members})

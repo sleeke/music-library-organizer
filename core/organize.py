@@ -23,7 +23,8 @@ def compute_target_path(mp3_path, tags):
 
     Note: The filename only contains the track number and title (e.g., "01 - Title.mp3")
     because the artist/album directories already provide that information in the path.
-    This avoids duplication like "Artist - Album / Artist - Album / 01 - Title.mp3".
+    A file already inside its <Artist>/<Album> folder stays there rather than
+    being nested again.
     """
     title = tags.get('title')
     artist_tag = tags.get('artist')
@@ -43,9 +44,24 @@ def compute_target_path(mp3_path, tags):
     else:
         name = f'{sanitize_filename(str(title))}.mp3'
 
-    artist_dir = os.path.join(os.path.dirname(mp3_path),
-                              sanitize_filename(str(artist)))
-    return os.path.join(artist_dir, sanitize_filename(str(album)), name)
+    artist_dir_name = sanitize_filename(str(artist))
+    album_dir_name = sanitize_filename(str(album))
+    base_dir = organized_base_dir(mp3_path, artist_dir_name, album_dir_name)
+    return os.path.join(base_dir, artist_dir_name, album_dir_name, name)
+
+
+def organized_base_dir(mp3_path, artist_dir_name, album_dir_name):
+    """Directory to build <Artist>/<Album>/ under for mp3_path.
+
+    Normally the file's own directory; when the file already sits in
+    <artist_dir_name>/<album_dir_name>/, the directory above that pair.
+    """
+    album_dir = os.path.dirname(mp3_path)
+    artist_dir = os.path.dirname(album_dir)
+    if (os.path.basename(album_dir) == album_dir_name
+            and os.path.basename(artist_dir) == artist_dir_name):
+        return os.path.dirname(artist_dir)
+    return album_dir
 
 
 def move_file(src, dst):

@@ -9,33 +9,33 @@ This script automatically syncs MP3 file metadata by:
 4. Enriching artist data via **MusicBrainz** (stage-name → real-name resolution)
 5. **Optionally fetching and embedding cover art** via Discogs
 6. Updating ID3 tags in MP3 files
-7. **Organizing files into a folder structure: `<Artist>/<Album>/Artist - Album - <Track Number> - <Track Name>.mp3`**
+7. **Organizing files into a folder structure: `<Artist>/<Album>/<Track Number> - <Track Name>.mp3`**
 
 ## Filename Format
 
-The script organizes files into a hierarchical folder structure where each filename carries its full context (self-describing and portable if files are ever moved out of the folder hierarchy):
+The script organizes files into a hierarchical folder structure. Artist and album live in the folder names, so the filename carries only the track number and title:
 ```
-<Artist>/<Album>/<Artist> - <Album> - <Track Number> - <Track Name>.mp3
+<Artist>/<Album>/<Track Number> - <Track Name>.mp3
 ```
 
 Examples:
 ```
 Coldplay/
   Parachutes/
-    Coldplay - Parachutes - 01 - Don't Panic.mp3
-    Coldplay - Parachutes - 02 - Shiver.mp3
+    01 - Don't Panic.mp3
+    02 - Shiver.mp3
     ...
-    Coldplay - Parachutes - 05 - Yellow.mp3
+    05 - Yellow.mp3
     ...
 
 The Beatles/
   Abbey Road/
-    The Beatles - Abbey Road - 01 - Come Together.mp3
-    The Beatles - Abbey Road - 02 - Something.mp3
+    01 - Come Together.mp3
+    02 - Something.mp3
     ...
 ```
 
-Track numbers are automatically zero-padded to 2 digits (01, 02, etc.). If a track number is not available, the file is named `<Artist> - <Album> - <Track Name>.mp3`.
+Track numbers are automatically zero-padded to 2 digits (01, 02, etc.). If a track number is not available, the file is named `<Track Name>.mp3`. A file that is already inside its `<Artist>/<Album>/` folder is renamed in place rather than nested again.
 
 ### Input Filename Recognition
 
@@ -131,9 +131,9 @@ This is the main processing function that:
 
 #### Step 5: Organize into Folder Structure
 - Creates directory structure: `Artist/Album/`
-- Generates new filename: `<Artist> - <Album> - <Track Number> - <Track Name>.mp3`
+- Generates new filename: `<Track Number> - <Track Name>.mp3`
 - Track numbers are zero-padded to 2 digits (01, 02, etc.)
-- If no track number available, uses `<Artist> - <Album> - <Track Name>.mp3`
+- If no track number available, uses `<Track Name>.mp3`
 - Moves file to the organized location
 - Uses "not found" to mark metadata that couldn't be identified
 
@@ -156,8 +156,12 @@ The script includes a `compute_checksum()` function that uses SHA256 hashing to 
 # Install chromaprint (required for audio fingerprinting)
 brew install chromaprint
 
+# Create and activate a virtual environment (run from the repo root)
+python3 -m venv venv
+source venv/bin/activate
+
 # Install Python dependencies
-pip3 install --user mutagen requests pyacoustid
+pip install -r requirements.txt
 
 # (Optional) set your Discogs token for --fetch-cover
 export DISCOGS_TOKEN="your-token-here"
